@@ -1,58 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const images = document.querySelectorAll(".image");
-
-  images.forEach(image => {
-    image.addEventListener("dragstart", dragStart);
-    image.addEventListener("dragover", dragOver);
-    image.addEventListener("drop", drop);
-    image.addEventListener("dragenter", dragEnter);
-    image.addEventListener("dragleave", dragLeave);
+describe('Drag and Drop Images', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000'); // Change this to your actual URL
   });
 
-  let draggedElement = null;
+  it('should drag and drop images', () => {
+    const draggable = Cypress.$('#div1')[0]; // Pick up this
+    const droppable = Cypress.$('#div5')[0]; // Drop over this
 
-  function dragStart(event) {
-    draggedElement = event.target;
-    event.dataTransfer.setData("text/plain", draggedElement.id);
-    setTimeout(() => {
-      draggedElement.classList.add("dragging");
-    }, 0);
-  }
+    const coords = droppable.getBoundingClientRect();
 
-  function dragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  }
+    draggable.dispatchEvent(new MouseEvent('mousedown', { clientX: 0, clientY: 0 }));
+    draggable.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 0 }));
+    draggable.dispatchEvent(new MouseEvent('mousemove', { clientX: coords.x + 10, clientY: coords.y + 10 }));
+    draggable.dispatchEvent(new MouseEvent('mouseup'));
 
-  function drop(event) {
-    event.preventDefault();
-    const target = event.target;
-    const draggedId = event.dataTransfer.getData("text/plain");
+    cy.get('#div5').within(() => {
+      cy.get('.image').should('have.length', 1); // Adjust this assertion based on your requirements
+    });
+  });
 
-    if (target.classList.contains("image") && target.id !== draggedId) {
-      const draggedElement = document.getElementById(draggedId);
-
-      // Swap the background images
-      const tempBackground = target.style.backgroundImage;
-      target.style.backgroundImage = draggedElement.style.backgroundImage;
-      draggedElement.style.backgroundImage = tempBackground;
+  it('should verify presence of elements', () => {
+    for (let index = 1; index <= 6; index++) {
+      cy.get(`#div${index}`).should('have.length', 1);
     }
+  });
 
-    // Remove dragging class and reset border styles
-    draggedElement.classList.remove("dragging");
-    target.classList.remove("over");
-  }
-
-  function dragEnter(event) {
-    event.preventDefault();
-    if (event.target.classList.contains("image")) {
-      event.target.classList.add("over");
-    }
-  }
-
-  function dragLeave(event) {
-    if (event.target.classList.contains("image")) {
-      event.target.classList.remove("over");
-    }
-  }
+  // Add more test cases as needed
 });
