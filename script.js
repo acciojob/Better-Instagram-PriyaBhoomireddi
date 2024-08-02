@@ -1,37 +1,21 @@
-let dragged;
+window.onload = function() {
+    let images = document.querySelectorAll('.image');
+    let currentImage;
 
-document.addEventListener("drag", function(event) {}, false);
+    images.forEach(img => {
+        img.addEventListener('dragstart', function(e) {
+            currentImage = this;
+            e.dataTransfer.setData('text/plain', getComputedStyle(this).backgroundImage);
+        });
 
-document.addEventListener("dragstart", function(event) {
-    dragged = event.target;
-    event.target.style.opacity = .5;
-}, false);
+        img.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
 
-document.addEventListener("dragend", function(event) {
-    event.target.style.opacity = "";
-}, false);
-
-document.addEventListener("dragover", function(event) {
-    event.preventDefault();
-}, false);
-
-document.addEventListener("dragenter", function(event) {
-    if (event.target.className == "image") {
-        event.target.style.background = "purple";
-    }
-}, false);
-
-document.addEventListener("dragleave", function(event) {
-    if (event.target.className == "image") {
-        event.target.style.background = "";
-    }
-}, false);
-
-document.addEventListener("drop", function(event) {
-    event.preventDefault();
-    if (event.target.className == "image") {
-        event.target.style.background = "";
-        dragged.parentNode.removeChild(dragged);
-        event.target.appendChild(dragged);
-    }
-}, false);
+        img.addEventListener('drop', function(e) {
+            e.preventDefault();
+            currentImage.style.backgroundImage = getComputedStyle(this).backgroundImage;
+            this.style.backgroundImage = e.dataTransfer.getData('text/plain');
+        });
+    });
+};
