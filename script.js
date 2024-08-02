@@ -1,11 +1,11 @@
 describe('Drag and Drop Images', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000'); // Change this to your actual URL
+    cy.visit('http://localhost:3000'); 
   });
 
   it('should drag and drop images', () => {
-    const draggable = Cypress.$('#div1')[0]; // Pick up this
-    const droppable = Cypress.$('#div5')[0]; // Drop over this
+    const draggable = Cypress.$('#div1')[0]; 
+    const droppable = Cypress.$('#div5')[0]; 
 
     const coords = droppable.getBoundingClientRect();
 
@@ -15,7 +15,7 @@ describe('Drag and Drop Images', () => {
     draggable.dispatchEvent(new MouseEvent('mouseup'));
 
     cy.get('#div5').within(() => {
-      cy.get('.image').should('have.length', 1); // Adjust this assertion based on your requirements
+      cy.get('.image').should('have.length', 1); 
     });
   });
 
@@ -25,5 +25,5 @@ describe('Drag and Drop Images', () => {
     }
   });
 
-  // Add more test cases as needed
+
 });
