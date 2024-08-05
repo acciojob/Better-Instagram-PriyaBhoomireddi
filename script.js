@@ -23,7 +23,8 @@ window.onload = function() {
     });
   });
 };
-it('should drag and drop images', () => {
+describe('Drag and Drop Test', function() {
+  it('should drag and drop images', () => {
     const draggable = Cypress.$('#div1')[0]; 
     const droppable = Cypress.$('#div5')[0]; 
 
@@ -37,4 +38,5 @@ it('should drag and drop images', () => {
     cy.get('#div5').within(() => {
       cy.get('.image').should('have.length', 1); 
     });
+  });
 });
